@@ -102,14 +102,13 @@ function Game(number_cells,board_size,border_size)
 		game.board[i] = new Array(number_cells);
 		for(var j=0;j<game.board[i].length;j++)
 		{
-			// John's comment: I switched the condition of H3 & H4, so that the game flow becomes clockwise
 			if(i==0&&j==0)
 				game.board[i][j] = 'H1';
 			else if(i==0&&j==game.number_cells-1)
 				game.board[i][j] = 'H2';
-			else if(i==game.number_cells-1&&j==game.number_cells-1)
-				game.board[i][j] = 'H3';
 			else if(i==game.number_cells-1&&j==0)
+				game.board[i][j] = 'H3';
+			else if(i==game.number_cells-1&&j==game.number_cells-1)
 				game.board[i][j] = 'H4';
 			else
 				game.board[i][j] = 'B';

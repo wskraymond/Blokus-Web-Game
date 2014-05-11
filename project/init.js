@@ -26,6 +26,9 @@ canvas.addEventListener('click', function(e) {
 			if(players[client_index].nextTile(tile,mousePos))
 			{
 				viewRefresh(canvas);
+				//send to server
+				if(network)
+					players[client_index].send("next",tile,tile_index,mousePos);
 				players[client_index].removeTile(null);
 				
 				game.nextToken(network);	//next player
@@ -33,9 +36,6 @@ canvas.addEventListener('click', function(e) {
 				postureViewUpdate(canvas_posture,tile,players[client_index].id);
 				pickerViewUpdate(canvas_picker,players[client_index]);
 				
-				//send to server
-				if(network)
-					players[client_index].send("next",tile,tile_index,mousePos);
 				
 				console.log("success");
 			}
