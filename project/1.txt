@@ -2,3 +2,4 @@ hard code client index so that to identify each browser
 receive message and broadcast to other clients
 
 git push -u origin danny
+git pull https://github.com/wskraymond/csci4140-project.git danny
