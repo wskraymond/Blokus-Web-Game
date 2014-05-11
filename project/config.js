@@ -5,7 +5,7 @@ for a total of 400 squares.
 //configuration variable
 
 /*-----------SocketIO----------------*/
-var network = false; 	//multi-player connection version => set true , otherwise set false
+var network = true; 	//multi-player connection version => set true , otherwise set false
 var websocket_server_domain = "http://localhost";
 var websocket_server_port = 8000;
 var client_socket;
