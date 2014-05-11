@@ -1,0 +1,9 @@
+Hello. I'm John.
+I have modifed the files:
+	model.js	line 105
+	view.js 	line 68
+	index.html	line 33
+
+I modifed some layout of the UI in index.html, and made the game flow become clockwise.
+
+I have added some comments in those files. Please check them.

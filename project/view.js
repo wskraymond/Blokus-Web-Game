@@ -65,7 +65,8 @@ function postureViewUpdate(canvas,tile,playerID)
 	{
 		for(var i=0; i<tile.cells.length;i++)
 		{
-			context.fillRect(tile.cells[i].x*(game.cell_size + game.border_size*2)+ game.border_size, tile.cells[i].y*(game.cell_size + game.border_size*2)+ game.border_size, game.cell_size, game.cell_size);
+			// John's comment: I have added a little code so that the tile would be displayed at the center of the posture view
+			context.fillRect(tile.cells[i].x*(game.cell_size + game.border_size*2)+ game.border_size + (150-tile.w*game.cell_size)/2, tile.cells[i].y*(game.cell_size + game.border_size*2)+ game.border_size +  (150-tile.h*game.cell_size)/2, game.cell_size, game.cell_size);
 		}
 	}
 }
