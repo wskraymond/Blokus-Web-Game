@@ -13,7 +13,7 @@ var client_socket;
 
 var tile;
 var tile_index;
-var client_index = 0;
+var client_index = 3;
 
 //default setting
 //B for background color

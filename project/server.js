@@ -62,10 +62,13 @@ function onClientDisconnect() {
 function onNewPlayer(msg) {
 	// Broadcast new player to connected socket clients
 	util.log("Yeah!");
+	util.log("msg is: " + msg);
 	util.log(msg.status + " "  + msg.data);
 	util.log(msg.data.tile);
+	util.log(JSON.stringify(msg.data));
 	//{ status:"next",data:{tile:tile, tile_index:tile_index, mouse_co:mouse_co} }
-	this.broadcast.emit("message", {id: this.id});
+	this.broadcast.emit("message", msg);
+	//this.broadcast.emit("message", {status:msg.status});
 };
 
 
