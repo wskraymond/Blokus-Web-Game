@@ -1,5 +1,25 @@
+function gameEndHandler()
+{
+	console.log("sdafsd");
+	var scores = document.getElementsByName('score');
+	for(var i=0;i<scores.length;i++)
+	{
+		scores[i].innerHTML = players[i].score;
+		console.log(players[i].score);
+	}
+	
+	$(".inline").click();
+}
+
 function init()
 {
+
+$(".inline").colorbox({inline:true, width:"50%"});
+//-------------game init---------
+if(network)
+	game.init();
+//--------------------------------
+
 var canvas = document.getElementById("boardCanvas");
 var ctx = canvas.getContext("2d");
 
@@ -125,7 +145,15 @@ document.getElementById("next").addEventListener('click',function(e){
 	e.stopPropagation();
 	if(game.token_index==client_index)
 	{
-		game.nextToken(network);//next player		
+		game.pass_num++;
+		if(game.isGameEnd())
+		{
+			gameEndHandler();
+		}
+		else
+		{
+			game.nextToken(network);	//next player		
+		}
 		
 		postureViewUpdate(canvas_posture,tile,players[client_index].id);
 		pickerViewUpdate(canvas_picker,players[client_index]);
@@ -133,6 +161,8 @@ document.getElementById("next").addEventListener('click',function(e){
 		//send to server
 		if(network)
 			players[client_index].send("empty",null,null,null);
+			
+		players[client_index].stop = true;
 	}
 	else
 		alert("This is player[" + game.token_index + "]'s round!");

@@ -38,13 +38,18 @@ function Game(number_cells,board_size,border_size)
 	var game = this;
 	
 	game.token_index = 0;		//the person who hold the game
-	game.nextToken = function(online){
-		game.token_index++;
-		game.token_index%=4;
+	game.pass_num = 0;
+	game.nextToken = function(online){		
+		var counter = 0;
+		do{
+			game.token_index++;
+			game.token_index%=4;
+			counter++;
+		}while(players[game.token_index].stop && counter<4);
+		
 		if(!online)	//no network, single PC version
-			client_index = game.token_index;	
+			client_index = game.token_index;
 	}	
-	
 	
 	game.init = function(onSocketConnected,onSocketDisconnect,onSocketMessage){
 		client_socket = io.connect(websocket_server_domain, {port: websocket_server_port, transports: ["websocket"]});
@@ -63,8 +68,11 @@ function Game(number_cells,board_size,border_size)
 			console.log("Error 3");
 	};
 	
-	game.run = function(){
-		
+	game.isGameEnd = function(){
+		if(game.pass_num>=4)
+			return true;
+		else
+			return false;
 	};
 	
 	game.board_size = board_size;
@@ -97,6 +105,7 @@ function Game(number_cells,board_size,border_size)
 		else
 			return false;
 	}
+	
 	function CheckAllEdge(pid,i,j)
 	{
 		//set edges
@@ -232,8 +241,5 @@ function Game(number_cells,board_size,border_size)
 					setHintByCell(game.board[i][j],i,j);
 			}
 		}
-	};
-	game.evaluateScore = function(){
-		//when game reach end , call this to evaluate Score for each players
 	};
 }
