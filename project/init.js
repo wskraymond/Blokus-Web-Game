@@ -47,6 +47,7 @@ canvas.addEventListener('mousemove', function(e) {
 /*-------------Socket IO-------------------------*/
 function onSocketConnected() {
 	console.log('Client['+ client_index +'] has connected to the server!');
+	
 };
 
 function onSocketDisconnect() {

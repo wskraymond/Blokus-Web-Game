@@ -94,7 +94,7 @@ function Player(id)
 			//danny- change
 			client_socket.emit('nextTile', { status:"next",data:{playerIndex:client_index,tile:tile, tile_index:tile_index, mouse_co:mouse_co} });
 		else
-			client_socket.emit('nextTile', {status:"empty",data:null});
+			client_socket.emit('session_key', {status:"empty",data:null});//danny change
 	};
 	
 	player.removeTile = function(ptile_index){

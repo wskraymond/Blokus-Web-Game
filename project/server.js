@@ -49,6 +49,8 @@ function onSocketConnection(client) {
 
 	// Listen for new player message
 	client.on("nextTile", onNewPlayer);
+
+	//client.on("session_key",)
 };
 
 // Socket client has disconnected
