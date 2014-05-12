@@ -87,6 +87,7 @@ function Player(id)
 	var player = this;
 	player.id = id;
 	player.score = 0;
+	player.stop = false;
 	player.tiles_set = jQuery.extend(true, [], tiles_set);	//copy array => []
 		
 	player.send = function(status,tile,tile_index,mouse_co){
@@ -109,6 +110,22 @@ function Player(id)
 			tile_index = null;
 		}
 	}
+	function getScore(tile){
+		//normal
+		if(tile.cells.length!=null)
+			player.score += tile.cells.length;
+		else
+			console.log('sadf');
+		
+		//bonus marks
+		if(player.tiles_set.length == 1)
+		{
+			player.score += 15;
+			if(tile.length == 1)
+				player.score += 20;
+		}
+			
+	};
 	player.nextTile = function(tile,mouse_co){
 		if(tile!=null)
 		{
@@ -116,6 +133,7 @@ function Player(id)
 			var error;
 			if((error=game.setTile(player.id,tile,focus_co))===true)
 			{
+				getScore(tile);
 				game.setHint();
 				return true;
 			}

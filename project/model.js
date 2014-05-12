@@ -39,11 +39,17 @@ function Game(number_cells,board_size,border_size)
 	var game = this;
 	
 	game.token_index = 0;		//the person who hold the game
-	game.nextToken = function(online){
-		game.token_index++;
-		game.token_index%=4;
+	game.pass_num = 0;
+	game.nextToken = function(online){		
+		var counter = 0;
+		do{
+			game.token_index++;
+			game.token_index%=4;
+			counter++;
+		}while(players[game.token_index].stop && counter<4);
+		
 		if(!online)	//no network, single PC version
-			client_index = game.token_index;	
+			client_index = game.token_index;
 	}	
 	
 	function onSocketConnected() {
@@ -72,7 +78,12 @@ function Game(number_cells,board_size,border_size)
 		}
 		else if(msg.status == "empty")
 		{
-			
+			game.pass_num++;
+			players[game.token_index].stop = true;
+			if(game.isGameEnd())
+			{	
+				gameEndHandler();
+			}
 		}
 		else if(msg.status == "end")
 		{
@@ -88,8 +99,11 @@ function Game(number_cells,board_size,border_size)
 		client_socket.on('message',onSocketMessage);
 	};
 	
-	game.run = function(){
-		
+	game.isGameEnd = function(){
+		if(game.pass_num>=4)
+			return true;
+		else
+			return false;
 	};
 	
 	game.board_size = board_size;
@@ -122,6 +136,7 @@ function Game(number_cells,board_size,border_size)
 		else
 			return false;
 	}
+	
 	function CheckAllEdge(pid,i,j)
 	{
 		//set edges
@@ -257,8 +272,5 @@ function Game(number_cells,board_size,border_size)
 					setHintByCell(game.board[i][j],i,j);
 			}
 		}
-	};
-	game.evaluateScore = function(){
-		//when game reach end , call this to evaluate Score for each players
 	};
 }
