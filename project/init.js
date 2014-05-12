@@ -43,7 +43,7 @@ canvas.addEventListener('mousemove', function(e) {
 		topLayerView_transform(canvas,mousePos,tile,players[client_index].id)
 }, false);
 
-
+//danny change
 /*-------------Socket IO-------------------------*/
 function onSocketConnected() {
 	console.log('Client['+ client_index +'] has connected to the server!');
