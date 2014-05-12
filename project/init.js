@@ -1,51 +1,5 @@
-function onSocketConnected() {
-	console.log('Client['+ client_index +'] has connected to the server!');
-};
-
-function onSocketDisconnect() {
-	console.log("Disconnected from the socket server");
-};
-
-function onSocketMessage(msg){
-	//{status:next/empty/end,data:{playerID:playerID,tile:tile,tile_index:tile_index,mouse_co:mouse_co}}
-	//var msg = JSON.parse(msgJSON); //no need to parse JSON data  ,since already did it inside
-	console.log("Entered!!!");
-	console.log(JSON.stringify(msg));
-	console.log(msg);
-	if(msg.status == "next")
-	{
-		if((game.token_index==msg.data.playerIndex))	//danny- change
-		{
-			if(players[game.token_index].nextTile(msg.data.tile,msg.data.mouse_co))
-			{
-				console.log("hiihihi");			
-				var canvas = document.getElementById("boardCanvas"); //Without this line, canvas is undefined.
-				viewRefresh(canvas);
-				players[game.token_index].removeTile(msg.data.tile_index);
-				game.nextToken(network);
-			}
-		}
-	}
-	else if(msg.status == "empty")
-	{
-		
-	}
-	else if(msg.status == "end")
-	{
-		
-	}
-};
-
 function init()
 {
-
-console.log('init');
-
-//-------------game init---------
-if(network)
-	game.init(onSocketConnected,onSocketDisconnect,onSocketMessage);
-//--------------------------------
-
 var canvas = document.getElementById("boardCanvas");
 var ctx = canvas.getContext("2d");
 
@@ -89,6 +43,50 @@ canvas.addEventListener('mousemove', function(e) {
 		topLayerView_transform(canvas,mousePos,tile,players[client_index].id)
 }, false);
 
+
+/*-------------Socket IO-------------------------*/
+function onSocketConnected() {
+	console.log('Client['+ client_index +'] has connected to the server!');
+};
+
+function onSocketDisconnect() {
+	console.log("Disconnected from the socket server");
+};
+
+function onSocketMessage(msg){
+	//{status:next/empty/end,data:{playerID:playerID,tile:tile,tile_index:tile_index,mouse_co:mouse_co}}
+	//var msg = JSON.parse(msgJSON); //no need to parse JSON data  ,since already did it inside
+	console.log("Entered!!!");
+	console.log(JSON.stringify(msg));
+	console.log(msg);
+	if(msg.status == "next")
+	{
+		if((game.token_index==msg.data.playerIndex))	//danny- change
+		{
+			if(players[game.token_index].nextTile(msg.data.tile,msg.data.mouse_co))
+			{
+				console.log("hiihihi");			
+				viewRefresh(canvas);
+				players[game.token_index].removeTile(msg.data.tile_index);
+				game.nextToken(network);
+			}
+		}
+	}
+	else if(msg.status == "empty")
+	{
+		
+	}
+	else if(msg.status == "end")
+	{
+		
+	}
+};
+console.log('init');
+//-------------game init---------
+if(network)
+	game.init(onSocketConnected,onSocketDisconnect,onSocketMessage);
+//--------------------------------
+/*--------------END------------------------------*/
 
 var canvas_posture = document.getElementById("posture");
 var ctx_posture = canvas_posture.getContext("2d");
