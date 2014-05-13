@@ -51,8 +51,14 @@ function Game(number_cells,board_size,border_size)
 			client_index = game.token_index;
 	}	
 	
-	game.init = function(onSocketConnected,onSocketDisconnect,onSocketMessage){
+	game.init = function(onSocketConnected,onSocketDisconnect,onSocketMessage,onChangeClientIndex){
 		client_socket = io.connect(websocket_server_domain, {port: websocket_server_port, transports: ["websocket"]});
+		//emit client_index to the server
+		//client_index = 0;
+		//client_socket.on('client_index',onChangeClientIndex);
+		//client_socket.on('client_index',function(msg){console.log("client_index in function is: " + msg); client_index=msg;});
+		console.log("client_index is: " + client_index);
+		//client_index = 0;
 		// Add a Event listener
 		if(onSocketConnected)
 			client_socket.on('connect',onSocketConnected);
