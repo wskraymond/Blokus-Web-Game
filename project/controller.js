@@ -92,9 +92,9 @@ function Player(id)
 		
 	player.send = function(status,tile,tile_index,mouse_co){
 		if(status=='next')
-			client_socket.emit('nextTile', { status:"next",data:{tile:tile, tile_index:tile_index, mouse_co:mouse_co} });
+			client_socket.emit('nextTile',{ status:"next",data:{playerIndex:client_index,tile:tile, tile_index:tile_index, mouse_co:mouse_co} });
 		else
-			client_socket.emit('nextTile', {status:"empty",data:null});
+			client_socket.emit('nextTile', {status:"empty",data:{playerIndex:client_index}});
 	};
 	
 	player.removeTile = function(ptile_index){
@@ -114,8 +114,6 @@ function Player(id)
 		//normal
 		if(tile.cells.length!=null)
 			player.score += tile.cells.length;
-		else
-			console.log('sadf');
 		
 		//bonus marks
 		if(player.tiles_set.length == 1)

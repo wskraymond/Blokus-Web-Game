@@ -14,11 +14,12 @@ function gameEndHandler()
 function init()
 {
 
-$(".inline").colorbox({inline:true, width:"50%"});
-//-------------game init---------
 if(network)
-	game.init();
-//--------------------------------
+	console.log("online mode");
+else
+	console.log("offline mode");
+
+$(".inline").colorbox({inline:true, width:"50%"});
 
 var canvas = document.getElementById("boardCanvas");
 var ctx = canvas.getContext("2d");
@@ -38,16 +39,16 @@ canvas.addEventListener('click', function(e) {
 			if(players[client_index].nextTile(tile,mousePos))
 			{
 				viewRefresh(canvas);
-				players[client_index].removeTile(null);
-				
-				game.nextToken(network);	//next player
-				
-				postureViewUpdate(canvas_posture,tile,players[client_index].id);
-				pickerViewUpdate(canvas_picker,players[client_index]);
 				
 				//send to server
 				if(network)
 					players[client_index].send("next",tile,tile_index,mousePos);
+			
+				players[client_index].removeTile(null);
+				game.nextToken(network);	//next player
+				
+				postureViewUpdate(canvas_posture,tile,players[client_index].id);
+				pickerViewUpdate(canvas_picker,players[client_index]);
 				
 				console.log("success");
 			}
@@ -63,6 +64,73 @@ canvas.addEventListener('mousemove', function(e) {
 		topLayerView_transform(canvas,mousePos,tile,players[client_index].id)
 }, false);
 
+/*---------------Socket IO-------------*/
+	function onSocketConnected() {
+		console.log('Client['+ client_index +'] has connected to the server!');
+		//send cookies {session_key,..} to server to retrive playerIndex;
+		if($.cookie(session_key_name))
+		{
+			client_socket.emit("cookies",{cookies:{sid:$.cookie(session_key_name)}});	//for server side to get, msg.cookies.sid ....
+			console.log('cookies{'+ $.cookie(session_key_name) +'} has been sent to the server!');
+		}
+		else
+			console.log("no value of name" + session_key_name);
+	};
+	
+	function onSocketIndex(playerIndex)
+	{
+		console.log('PlayerIndex:' + playerIndex + 'has been received');
+		client_index = playerIndex;
+	}
+	
+	function onSocketDisconnect() {
+		console.log("Disconnected from socket server");
+	};
+	
+	function onSocketMessage(msg){
+		//{status:next/empty/end,data:{playerID:playerID,tile:tile,tile_index:tile_index,mouse_co:mouse_co}}
+		//var msg = JSON.parse(msgJSON); //no need to parse JSON data  ,since already did it inside
+		
+		if(msg.status == "next")
+		{
+			if((game.token_index==msg.data.playerIndex))
+			{
+				if(players[game.token_index].nextTile(msg.data.tile,msg.data.mouse_co))
+				{
+					viewRefresh(canvas);
+					players[game.token_index].removeTile(msg.data.tile_index);
+					game.nextToken(network);
+				}
+			}
+			else
+				onsole.log("Error: wrong playerIndex " + msg.data.playerIndex);
+		}
+		else if(msg.status == "empty")
+		{
+			if((game.token_index==msg.data.playerIndex))
+			{
+				game.pass_num++;
+				players[game.token_index].stop = true;
+				if(game.isGameEnd())
+				{	
+					gameEndHandler();
+				}
+				else
+					game.nextToken(network);
+			}
+			else
+				console.log("Error: wrong playerIndex " + msg.data.playerIndex);
+		}
+		else if(msg.status == "end")
+		{
+			
+		}
+	};
+	//-------------game init---------
+	if(network)
+		game.init(onSocketConnected,onSocketDisconnect,onSocketIndex,onSocketMessage);
+	//--------------------------------
+/*---------------END-------------------*/
 
 var canvas_posture = document.getElementById("posture");
 var ctx_posture = canvas_posture.getContext("2d");

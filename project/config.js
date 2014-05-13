@@ -9,6 +9,7 @@ var network = false; 	//multi-player connection version => set true , otherwise 
 var websocket_server_domain = "http://localhost";
 var websocket_server_port = 8000;
 var client_socket;
+var session_key_name = "session_key";	//session key's cookie name
 /*------------------------------------*/
 
 var tile;

@@ -7,14 +7,13 @@ function cell(j,i)
 var tile1 = {w:1,h:1,cells:[cell(0,0)]};
 var tile2 = {w:2,h:1,cells:[cell(0,0),cell(1,0)]};
 var tile3 = {w:2,h:2,cells:[cell(0,0),cell(1,0),cell(1,1)]};
-var tile4 = {w:3,h:2,cells:[cell(0,0),cell(1,0),cell(1,1),cell(2,0)]};
+var tile4 = {w:3,h:1,cells:[cell(0,0),cell(1,0),cell(2,0)]};
 var tile5 = {w:2,h:2,cells:[cell(0,0),cell(1,0),cell(0,1),cell(1,1)]};
 var tile6 = {w:3,h:2,cells:[cell(1,0),cell(0,1),cell(1,1),cell(2,1)]};
 var tile7 = {w:4,h:1,cells:[cell(0,0),cell(1,0),cell(2,0),cell(3,0)]};
 var tile8 = {w:3,h:2,cells:[cell(0,1),cell(1,1),cell(2,1),cell(2,0)]};
 var tile9 = {w:3,h:2,cells:[cell(1,0),cell(2,0),cell(0,1),cell(1,1)]};
 var tile10 = {w:4,h:2,cells:[cell(0,0),cell(0,1),cell(1,1),cell(2,1),cell(3,1)]};
-var tile11 = {w:3,h:3,cells:[cell(1,0),cell(1,1),cell(1,2),cell(0,2),cell(2,2)]};
 var tile11 = {w:3,h:3,cells:[cell(1,0),cell(1,1),cell(1,2),cell(0,2),cell(2,2)]};
 var tile12 = {w:3,h:3,cells:[cell(0,0),cell(0,1),cell(0,2),cell(1,2),cell(2,2)]};
 var tile13 = {w:4,h:2,cells:[cell(0,1),cell(1,1),cell(1,0),cell(2,0),cell(3,0)]};
@@ -51,52 +50,31 @@ function Game(number_cells,board_size,border_size)
 		if(!online)	//no network, single PC version
 			client_index = game.token_index;
 	}	
-	
-	function onSocketConnected() {
-		console.log('Client['+ client_index +'] has connected to the server!');
-	};
-
-	function onSocketDisconnect() {
-		console.log("Disconnected from socket server");
-	};
-	
-	function onSocketMessage(msg){
-		//{status:next/empty/end,data:{playerID:playerID,tile:tile,tile_index:tile_index,mouse_co:mouse_co}}
-		//var msg = JSON.parse(msgJSON); //no need to parse JSON data  ,since already did it inside
 		
-		if(msg.status == "next")
-		{
-			if((game.token_index==msg.data.playerID))
-			{
-				if(players[game.token_index].nextTile(msg.data.tile,msg.data.mouse_co))
-				{
-					viewRefresh(canvas);
-					players[game.token_index].removeTile(msg.data.tile_index);
-					game.nextToken(network);
-				}
-			}
-		}
-		else if(msg.status == "empty")
-		{
-			game.pass_num++;
-			players[game.token_index].stop = true;
-			if(game.isGameEnd())
-			{	
-				gameEndHandler();
-			}
-		}
-		else if(msg.status == "end")
-		{
-			
-		}
-	};
-	
-	game.init = function(){
-		client_socket = io.connect(websocket_server_domain, {port: websocket_server_port, transports: ["websocket"]});
+	game.init = function(onSocketConnected,onSocketDisconnect,onSocketIndex,onSocketMessage){
 		// Add a Event listener
-		client_socket.on('connect',onSocketConnected);
-		client_socket.on('disconnect',onSocketDisconnect);
-		client_socket.on('message',onSocketMessage);
+		if(onSocketConnected)
+			client_socket.on('connect',onSocketConnected);
+		else
+			console.log("no onSocketConnected");
+			
+		if(onSocketIndex)
+			client_socket.on('clientIndex',onSocketIndex);
+		else
+			console.log("no onSocketIndex");
+		
+		if(onSocketDisconnect)
+			client_socket.on('disconnect',onSocketDisconnect);
+		else
+			console.log("no onSocketDisconnect");
+			
+		if(onSocketMessage)
+			client_socket.on('message',onSocketMessage);
+		else
+			console.log("no onSocketMessage");
+		
+		//connect to server
+		client_socket = io.connect(websocket_server_domain, {port: websocket_server_port, transports: ["websocket"]});
 	};
 	
 	game.isGameEnd = function(){
