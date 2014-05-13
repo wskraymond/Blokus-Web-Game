@@ -68,7 +68,7 @@ function init(value)
 			topLayerView_transform(canvas,mousePos,tile,players[client_index].id)
 	}, false);
 
-//danny change
+//Danny's change
 /*-------------Socket IO-------------------------*/
 	function onSocketConnected() {
 		console.log('Client['+ client_index +'] has connected to the server!');
