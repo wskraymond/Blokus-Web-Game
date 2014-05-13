@@ -13,12 +13,16 @@ function gameEndHandler()
 
 function init(value)
 {
-	client_index = value;
-	//console.log("The client_index for init() is: " + client_index);
+	/*----------------Raymond's change-------------*/
+	if(network)
+		console.log("online mode");
+	else
+		console.log("offline mode");
+	/*---------------------------------------------*/
 	$(".inline").colorbox({inline:true, width:"50%"});
 	//-------------game init---------
 	if(network)
-		game.init(onSocketConnected,onSocketDisconnect,onSocketMessage,onChangeClientIndex);
+		game.init(onSocketConnected,onSocketDisconnect,onSocketIndex,onSocketMessage); //Danny's change
 	//--------------------------------
 
 	var canvas = document.getElementById("boardCanvas");
@@ -68,10 +72,24 @@ function init(value)
 /*-------------Socket IO-------------------------*/
 	function onSocketConnected() {
 		console.log('Client['+ client_index +'] has connected to the server!');
+		/*----------------Raymond's change-------------*/
+		//send cookies {session_key,..} to server to retrive playerIndex;
+		if($.cookie(session_key_name))
+		{
+			client_socket.emit("cookies",{cookies:{sid:$.cookie(session_key_name)}});	//for server side to get, msg.cookies.sid ....
+			console.log('cookies{'+ $.cookie(session_key_name) +'} has been sent to the server!');
+		}
+		else
+			console.log("no value of name" + session_key_name);
+		/*--------------------------------------------*/
 	};
 
 	function onSocketDisconnect() {
 		console.log("Disconnected from the socket server");
+	};
+
+	function onSocketIndex(){
+		console.log("Entered in onSocketIndex.");
 	};
 
 	function onSocketMessage(msg){
@@ -94,24 +112,31 @@ function init(value)
 			}
 		}
 		else if(msg.status == "empty")
-		{
-			
+		{/*----------------Raymond's change-------------*/
+			if((game.token_index==msg.data.playerIndex))
+			{
+				game.pass_num++;
+				players[game.token_index].stop = true;
+				if(game.isGameEnd())
+				{	
+					gameEndHandler();
+				}
+				else
+					game.nextToken(network);
+			}
+			else
+				console.log("Error: wrong playerIndex " + msg.data.playerIndex);
+		/*--------------------------------------------*/
 		}
 		else if(msg.status == "end")
 		{
-			
 		}
 	};
-
-	function onChangeClientIndex(msg){
-		console.log("Entered in onChangeClientIndex! Yeah! And the client_index is: " + msg);
-		client_index = msg;
-	}
 
 	console.log('init');
 	//-------------game init---------
 	/*if(network)
-		game.init(onSocketConnected,onSocketDisconnect,onSocketMessage,onChangeClientIndex);*/
+		game.init(onSocketConnected,onSocketDisconnect,onSocketMessage);*/
 	//--------------------------------
 	/*--------------END------------------------------*/
 
@@ -185,8 +210,12 @@ function init(value)
 	},false);
 
 }
-client_socket = io.connect(websocket_server_domain, {port: websocket_server_port, transports: ["websocket"]});
-client_socket.emit("client_index", client_index);
-client_socket.on('client_index',function(msg){console.log("client_index in function is: " + msg); client_index=msg; 
-	window.addEventListener("load",init(client_index),false);});
-//window.addEventListener("load",init,false);
+//Danny's change
+if(network){
+	client_socket = io.connect(websocket_server_domain, {port: websocket_server_port, transports: ["websocket"]});
+	client_socket.emit("client_index", client_index);
+	client_socket.on('client_index',function(msg){console.log("client_index in function is: " + msg); client_index=msg; 
+		window.addEventListener("load",init(client_index),false);});
+}
+else
+	window.addEventListener("load",init,false);

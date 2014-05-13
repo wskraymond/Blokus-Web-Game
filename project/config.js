@@ -9,12 +9,15 @@ var network = true; 	//multi-player connection version => set true , otherwise s
 var websocket_server_domain = "http://localhost";
 var websocket_server_port = 8000;
 var client_socket;
+var session_key_name = "session_key";	//session key's cookie name //Raymond's change
 /*------------------------------------*/
 
 var tile;
 var tile_index;
-var client_index;
-
+var client_index;//Danny's change
+//Danny's change
+if(!network)
+	client_index = 0;
 //default setting
 //B for background color
 //H for hints' color

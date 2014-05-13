@@ -50,29 +50,31 @@ function Game(number_cells,board_size,border_size)
 		if(!online)	//no network, single PC version
 			client_index = game.token_index;
 	}	
-	
-	game.init = function(onSocketConnected,onSocketDisconnect,onSocketMessage,onChangeClientIndex){
+	/*----------------------------------Raymond's change---------------------------------------*/
+	game.init = function(onSocketConnected,onSocketDisconnect,onSocketIndex,onSocketMessage){
 		client_socket = io.connect(websocket_server_domain, {port: websocket_server_port, transports: ["websocket"]});
-		//emit client_index to the server
-		//client_index = 0;
-		//client_socket.on('client_index',onChangeClientIndex);
-		//client_socket.on('client_index',function(msg){console.log("client_index in function is: " + msg); client_index=msg;});
-		console.log("client_index is: " + client_index);
-		//client_index = 0;
-		// Add a Event listener
+		// Add Event listeners
 		if(onSocketConnected)
 			client_socket.on('connect',onSocketConnected);
 		else
-			console.log("Error 1");
+			console.log("no onSocketConnected");
+
+		if(onSocketIndex)
+			client_socket.on('clientIndex',onSocketIndex);
+		else
+			console.log("no onSocketIndex");
+
 		if(onSocketDisconnect)
 			client_socket.on('disconnect',onSocketDisconnect);
 		else
-			console.log("Error 2");
+			console.log("no onSocketDisconnect");
+
 		if(onSocketMessage)
 			client_socket.on('message',onSocketMessage);
 		else
-			console.log("Error 3");
+			console.log("no onSocketMessage");
 	};
+	/*----------------------------------------------------------------------------------------*/
 	
 	game.isGameEnd = function(){
 		if(game.pass_num>=4)

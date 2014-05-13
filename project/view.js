@@ -1,27 +1,37 @@
-
+/*------------------------------Raymond's change------------------------------*/
 function viewRefresh(canvas)
 {
 	var context = canvas.getContext('2d');
 	var hint_p = /H/i;
-	var own_p = /H1/i;
+	var hid = 'H' + (client_index + 1);
+	var h_p = new RegExp(hid,'i');
 	for(var i=0,y=game.border_size ;i<game.number_cells;i++,y+= game.cell_size +  game.border_size*2)
 	{
 		for(var j=0,x=game.border_size ;j<game.number_cells;j++,x+=game.cell_size +  game.border_size*2)
 		{
 			if(hint_p.test(game.board[i][j]))
 			{
-				if(own_p.test(game.board[i][j]))
-					context.fillStyle = color_set['H1'];
+				if(!network)
+				{
+					if(client_index!==null)
+						context.fillStyle = color_set[hid];
+					else
+						context.fillStyle = color_set['B'];
+				}
+				else if(h_p.test(game.board[i][j]))
+					context.fillStyle = color_set[hid];
 				else
 					context.fillStyle = color_set['B'];
 			}
 			else
 				context.fillStyle = color_set[game.board[i][j]];
-			
+
 			context.fillRect(x,y,game.cell_size,game.cell_size);
 		}
 	}
 }
+/*--------------------------------------------------------------------------*/
+
 function cellUpdate(canvas, clicked_coordinate) {
         var context = canvas.getContext('2d');
 		var cell_coordinate = getCellCoordinate(clicked_coordinate);
