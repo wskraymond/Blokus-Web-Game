@@ -43,16 +43,13 @@ var setEventHandlers = function() {
 // New socket connection
 function onSocketConnection(client) {
 	util.log("New player has connected: " + client.id);
-	this.emit("client_index", client_index);
-	util.log("The client_index is: " + client_index);
-	client_index++;
 	// Listen for client disconnected
 	client.on("disconnect", onClientDisconnect);
 
 	// Listen for new player message
 	client.on("nextTile", onNewPlayer);
 
-	//client.on("client_index", onChangeClientIndex);
+	client.on("client_index", onChangeClientIndex);
 };
 
 // Socket client has disconnected
@@ -75,11 +72,12 @@ function onNewPlayer(msg) {
 	//this.broadcast.emit("message", {status:msg.status});
 };
 
-/*function onChangeClientIndex(msg){
-	//client_index = (msg + 1)%4;
+function onChangeClientIndex(msg){
 	this.emit("client_index", client_index);
-	client_index = (client_index + 1)%4;
-}*/
+	util.log("The client_index is: " + client_index);
+	client_index++;
+	client_index = client_index % 4;
+}
 /**************************************************
 ** RUN THE GAME
 **************************************************/

@@ -186,5 +186,7 @@ function init(value)
 
 }
 client_socket = io.connect(websocket_server_domain, {port: websocket_server_port, transports: ["websocket"]});
-client_socket.on('client_index',function(msg){console.log("client_index in function is: " + msg); client_index=msg; init(client_index)});
+client_socket.emit("client_index", client_index);
+client_socket.on('client_index',function(msg){console.log("client_index in function is: " + msg); client_index=msg; 
+	window.addEventListener("load",init(client_index),false);});
 //window.addEventListener("load",init,false);
