@@ -20,6 +20,32 @@ function init(value)
 		console.log("offline mode");
 	/*---------------------------------------------*/
 	$(".inline").colorbox({inline:true, width:"50%"});
+
+	/*$.ionSound({
+	    sounds: [                       // set needed sounds names
+	        "censor_beep",
+	        "glass_put_down_on_metal_draining_board",            // :0.3 - individual volume
+	        "monopoly_game_money_notes_wad_put_down_on_playing_board"
+	    ],
+	    path: "sounds/",                // set path to sounds
+	    multiPlay: false,               // playing only 1 sound at once
+	    volume: "0.3"                   // not so loud please
+	});
+
+	$.ionSound.play("censor_beep");
+
+	// For example playing sound on button click
+
+	$("#myButton").on("click", function(){
+	    $.ionSound.play("censor_beep");
+	});
+
+	// or reset the sound volume
+
+	$("#myButton").on("click", function(){
+	    $.ionSound.play("censor_beep:0.5");
+	});*/
+
 	//-------------game init---------
 	if(network)
 		game.init(onSocketConnected,onSocketDisconnect,onSocketIndex,onSocketMessage); //Danny's change
@@ -85,7 +111,7 @@ function init(value)
 	};
 
 	function onSocketDisconnect() {
-		console.log("Disconnected from the socket server");
+		console.log("Someone has disconnected from the socket server");
 	};
 
 	function onSocketIndex(){

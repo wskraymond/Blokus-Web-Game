@@ -3,3 +3,7 @@ receive message and broadcast to other clients
 
 git push -u origin danny
 git pull https://github.com/wskraymond/csci4140-project.git danny
+
+when no of players is four, send null(done)
+
+when a client disconnects, broadcast to the other 3 clients(done)

@@ -10,16 +10,18 @@ var util = require("util"),					// Utility resources (logging, object inspection
 **************************************************/
 var socket;		// Socket controller
 var client_index = 0;
+var totalNumOfClient = 0;
 
 /**************************************************
 ** GAME INITIALISATION
 **************************************************/
 function init() {
 	// Set up Socket.IO to listen on port 8000
-	socket = io.listen(8000);
+	socket = io.listen(8000, "127.0.1.1");
 
 	// Configure Socket.IO
 	socket.configure(function() {
+
 		// Only use WebSockets
 		socket.set("transports", ["websocket"]);
 
@@ -37,7 +39,7 @@ function init() {
 **************************************************/
 var setEventHandlers = function() {
 	// Socket.IO
-	socket.sockets.on("connection", onSocketConnection);
+	socket.on("connection", onSocketConnection);
 };
 
 // New socket connection
@@ -50,13 +52,16 @@ function onSocketConnection(client) {
 	client.on("nextTile", onNewPlayer);
 
 	client.on("client_index", onChangeClientIndex);
+
+	client.on("connect", onConnect);
+
 };
 
 // Socket client has disconnected
 function onClientDisconnect() {
 	util.log("Player has disconnected: "+this.id);
 	// Broadcast removed player to connected socket clients
-	this.broadcast.emit("remove player", {id: this.id});
+	this.broadcast.emit("disconnect", null);
 };
 
 // New player has joined
@@ -78,7 +83,15 @@ function onChangeClientIndex(msg){
 	this.emit("client_index", client_index);
 	util.log("The client_index is: " + client_index);
 	client_index++;
+	totalNumOfClient++;
 	client_index = client_index % 4;
+}
+
+function onConnect(){
+	if(client_index == 3){
+		this.emit("connect", null);
+		this.broadcast.emit("connect", null);
+	}
 }
 /**************************************************
 ** RUN THE GAME
