@@ -8,6 +8,7 @@
 	<script  type = "text/javascript" src="http://localhost:8000/socket.io/socket.io.js"></script> <!-- need to change-->
 	<script  type = "text/javascript" src = "jquery-1.11.1.min.js"></script>
 	<script	 type = "text/javascript" src="jquery.colorbox.js"></script>
+	<script type = "text/javascript" src="jquery.cookie.js"></script>
 	<script  type = "text/javascript" src = "model.js"> </script>
 	<script  type = "text/javascript" src = "view.js"> </script>
 	<script  type = "text/javascript" src = "controller.js"> </script>
@@ -16,10 +17,18 @@
 </head>
 
 <body>
-<div class = "wrapper">
+<div class = "wrapper">	
+	<div id = "frame1">
+		<div>
+			<span>waiting for 4 players to connect</span>
+			<img src="images/loading2.gif">
+		</div>
+	</div>
+	
+	<div id = "frame2">
 	<div class = "main">
+		<h3 id="status" >status bar</h3>
 	<div class = "left game_part">
-	<h5>Blokus Game</h5>
 	<canvas id="boardCanvas" width="450px" height="450px" style="border:0px solid #EEEEEE;">
 		Your browser does not support the HTML5 canvas tag.
 	</canvas>
@@ -27,6 +36,7 @@
 	<div class = "right">
 		<div class = "control">
 			<a id = "next" class="next_button">Pass</a>
+			<!-- <a id = "quit" class="next_button">quit</a> -->
 		</div>
 		<div class = "posture_part">
 			<canvas id="posture" width="150px" height="150px" style="border:0px solid #EEEEEE;">
@@ -68,7 +78,9 @@
 			</tr>
 		  </table>
        </div>
+   </div>   
    </div>
+   
 </div>
 </body>
 </html>

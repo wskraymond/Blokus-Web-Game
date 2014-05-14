@@ -1,6 +1,39 @@
+function showNotificationBar(message, duration, bgColor, txtColor, height) {
+ 
+    /*set default values*/
+    duration = typeof duration !== 'undefined' ? duration : 1500;
+    bgColor = typeof bgColor !== 'undefined' ? bgColor : "#F4E0E1";
+    txtColor = typeof txtColor !== 'undefined' ? txtColor : "#A42732";
+    height = typeof height !== 'undefined' ? height : 40;
+    /*create the notification bar div if it doesn't exist*/
+    if ($('#notification-bar').size() == 0) {
+        var HTMLmessage = "<div class='notification-message' style='text-align:center; line-height: " + height + "px;'> " + message + " </div>";
+        $('body').prepend("<div id='notification-bar' style='display:none; width:100%; height:" + height + "px; background-color: " + bgColor + "; position: fixed; z-index: 100; color: " + txtColor + ";border-bottom: 1px solid " + txtColor + ";'>" + HTMLmessage + "</div>");
+    }
+    /*animate the bar*/
+    $('#notification-bar').slideDown(function() {
+        setTimeout(function() {
+            $('#notification-bar').slideUp(function() {});
+        }, duration);
+    });
+}
+
+function updateStatus()
+{
+	if(network)
+	{
+		document.getElementById('status').innerHTML = "Player: " + (client_index + 1) + " current score: " + players[client_index].score;
+		$("#status").attr('class', colorClass[client_index]);
+	}
+	else
+	{
+		document.getElementById('status').innerHTML = "Player: " + ((client_index + 1)%4 + 1) + " current score: " + players[client_index].score;
+		$("#status").attr('class', colorClass[(client_index+1)%4]);
+	}
+}
+
 function gameEndHandler()
 {
-	console.log("sdafsd");
 	var scores = document.getElementsByName('score');
 	for(var i=0;i<scores.length;i++)
 	{
@@ -11,13 +44,35 @@ function gameEndHandler()
 	$(".inline").click();
 }
 
+function getNetworkMode()
+{
+	network = $.cookie(network_cookie);
+	if(network!=null)
+	{
+		network = JSON.parse(network);
+		if(network)
+			console.log("online mode");
+		else
+		{
+			client_index = 0;
+			console.log("offline mode");
+			updateStatus();
+		}
+	}
+	else
+		alert("Network Mode error");
+	
+	//debug
+	network = false;
+	client_index = 0;
+}
+
 function init()
 {
 
-if(network)
-	console.log("online mode");
-else
-	console.log("offline mode");
+$("#frame1").fadeIn();		//for use frame2
+
+getNetworkMode();
 
 $(".inline").colorbox({inline:true, width:"50%"});
 
@@ -53,7 +108,7 @@ canvas.addEventListener('click', function(e) {
 				console.log("success");
 			}
 			else
-				console.log("fail");
+				showNotificationBar("Wrong placement!");
 		}
 		else
 			alert("This is player[" + game.token_index + "]'s round!");
@@ -66,8 +121,13 @@ canvas.addEventListener('mousemove', function(e) {
 
 /*---------------Socket IO-------------*/
 	function onSocketConnected() {
-		console.log('Client['+ client_index +'] has connected to the server!');
+		console.log("all are connected!");
+		
+		$("#frame1").fadeOut("slow");
+		$("#frame2").fadeIn(3000);
+		updateStatus();
 		//send cookies {session_key,..} to server to retrive playerIndex;
+		/*
 		if($.cookie(session_key_name))
 		{
 			client_socket.emit("cookies",{cookies:{sid:$.cookie(session_key_name)}});	//for server side to get, msg.cookies.sid ....
@@ -75,13 +135,16 @@ canvas.addEventListener('mousemove', function(e) {
 		}
 		else
 			console.log("no value of name" + session_key_name);
+		*/
 	};
 	
+	/*
 	function onSocketIndex(playerIndex)
 	{
 		console.log('PlayerIndex:' + playerIndex + 'has been received');
 		client_index = playerIndex;
 	}
+	*/
 	
 	function onSocketDisconnect() {
 		console.log("Disconnected from socket server");

@@ -9,18 +9,20 @@ var network = false; 	//multi-player connection version => set true , otherwise 
 var websocket_server_domain = "http://localhost";
 var websocket_server_port = 8000;
 var client_socket;
-var session_key_name = "session_key";	//session key's cookie name
+var playerIndex_cookie = "playerIndex";	//session key's cookie name
+var network_cookie = "network";
 /*------------------------------------*/
 
 var tile;
 var tile_index;
-var client_index = 0;
+var client_index = null;
 
 //default setting
 //B for background color
 //H for hints' color
 //P* for Player color
-var color_set = {'B':"#FF6600",'H1':"#CCCCFF",'H2':"#CCCCFF",'H3':"#CCCCFF",'H4':"#CCCCFF",'P1':"blue",'P2':"yellow",'P3':"red",'P4':"green"};
+var color_set = {'B':"#FFB27E",'H1':"#CCCCFF",'H2':"#CCCCFF",'H3':"#CCCCFF",'H4':"#CCCCFF",'P1':"blue",'P2':"yellow",'P3':"red",'P4':"green"};
+var colorClass = ['blue','yellow','red','green'];
 
 //Game(number_cells,board_size,border_size);
 var game = new Game(20,450,1);

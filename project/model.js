@@ -50,18 +50,26 @@ function Game(number_cells,board_size,border_size)
 		if(!online)	//no network, single PC version
 			client_index = game.token_index;
 	}	
-		
+	
+	function getPlayerIndex()
+	{
+		client_index = parseInt($.cookie(playerIndex_cookie));
+		if(!client_index)
+			alert("playerIndex_cookie error");
+	}
 	game.init = function(onSocketConnected,onSocketDisconnect,onSocketIndex,onSocketMessage){
 		// Add a Event listener
 		if(onSocketConnected)
 			client_socket.on('connect',onSocketConnected);
 		else
 			console.log("no onSocketConnected");
-			
+		
+		/*
 		if(onSocketIndex)
 			client_socket.on('clientIndex',onSocketIndex);
 		else
 			console.log("no onSocketIndex");
+		*/
 		
 		if(onSocketDisconnect)
 			client_socket.on('disconnect',onSocketDisconnect);
@@ -73,8 +81,14 @@ function Game(number_cells,board_size,border_size)
 		else
 			console.log("no onSocketMessage");
 		
+		getPlayerIndex();
 		//connect to server
 		client_socket = io.connect(websocket_server_domain, {port: websocket_server_port, transports: ["websocket"]});
+		if(client_socket==null)
+			alert("Server connection fails");
+		else
+			console.log('Client['+ client_index +'] has connected to the server!');
+		
 	};
 	
 	game.isGameEnd = function(){
