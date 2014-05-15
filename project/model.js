@@ -204,9 +204,12 @@ function Game(number_cells,board_size,border_size)
 			}
 		}
 	}
+	
 	function setHintByCell(pid,i,j)
 	{
+		console.log("pid is: " + pid);
 		var hid = pid.replace(player_p, "H");
+		console.log("hid is: " + hid);
 		//setCorner
 		if(i-1>= 0)
 		{

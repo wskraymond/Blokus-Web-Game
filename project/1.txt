@@ -7,3 +7,9 @@ git pull https://github.com/wskraymond/csci4140-project.git danny
 when no of players is four, send null(done)
 
 when a client disconnects, broadcast to the other 3 clients(done)
+
+Just recall that I promised showing you another interesting use of data-url:
+1. Type in the location bar:"data:text/html, <html contenteditable>", without quotes. Then, press enter.
+2. Click on the document body.
+3. Start typing.
+4. To save, Ctrl + S / Cmd + S.

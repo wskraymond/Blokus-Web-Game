@@ -136,6 +136,7 @@ function Player(id)
 			{
 				getScore(tile);
 				game.setHint();
+				console.log("Entered in Hint");
 				return true;
 			}
 			console.log('Failure to place:'+error);
