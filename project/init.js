@@ -110,6 +110,7 @@ function init()
 				pickerViewUpdate(canvas_picker,players[client_index]);
 				
 				console.log("success");
+
 			}
 			else
 				console.log("fail");
