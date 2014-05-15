@@ -1,13 +1,38 @@
+/* css style for game room */
 body
 {
 	margin: 0px 0px;
+	background:#ffffff url("../images/background.jpg") repeat right top;
 }
+
 .wrapper
 {
 	margin: 0px auto;
-	width: 660px;
+	width: 710px;
+	box-shadow: 10px 10px 5px #333131;
+	background: #ffffff url("../images/layer.jpg") repeat right top;
+	padding: 8% 0px;
 }
 
+#frame1
+{
+	display:none;
+}
+
+#frame1 div span
+{
+	padding: 0px 20px;
+}
+
+#frame1 div
+{
+	text-align: center;
+}
+#frame2
+{
+	display:none;
+	padding: 0px 22px;
+}
 .main
 {
 	
@@ -73,6 +98,27 @@ body
 {
 	overflow:scroll;
 	width: 660px;
+	margin: 12px 0px;
+}
+
+.blue
+{
+	background-color: rgba(0, 0, 255, 0.16);
+}
+
+.yellow
+{
+	background-color: rgba(255, 255, 0, 0.16);
+}
+
+.red
+{
+	background-color: rgba(255, 0, 0, 0.16);
+}
+
+.green
+{
+	background-color: rgba(0, 128, 0, 0.16);
 }
 
 .rotate {
@@ -213,3 +259,4 @@ body
 	background-color:#eeaf41;
 }
 /* This button was generated using CSSButtonGenerator.com */
+/***************************************/
