@@ -142,8 +142,10 @@ function Player(id)
 			console.log('Failure to place:'+error);
 			return false;
 		}
-		else
+		else{
+			$.ionSound.play("censor_beep:0.3");
 			alert("Pick a tile first");
+		}
 		return false;
 	}
 }

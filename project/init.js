@@ -21,28 +21,30 @@ function init(value)
 	/*---------------------------------------------*/
 	$(".inline").colorbox({inline:true, width:"50%"});
 
-	/*$.ionSound({
+	$.ionSound({
 	    sounds: [                       // set needed sounds names
 	        "censor_beep",
 	        "glass_put_down_on_metal_draining_board",            // :0.3 - individual volume
-	        "monopoly_game_money_notes_wad_put_down_on_playing_board"
+	        "monopoly_game_money_notes_wad_put_down_on_playing_board",
+	        "uhoh",
+	        "pop"
 	    ],
 	    path: "sounds/",                // set path to sounds
-	    multiPlay: false,               // playing only 1 sound at once
-	    volume: "0.3"                   // not so loud please
+	    multiPlay: true,               // playing only 1 sound at once
+	    volume: "0.8"                   // not so loud please
 	});
 
-	$.ionSound.play("censor_beep");
+	//$.ionSound.play("glass_put_down_on_metal_draining_board");
 
 	// For example playing sound on button click
 
-	$("#myButton").on("click", function(){
+	/*$("#myButton").on("click", function(){
 	    $.ionSound.play("censor_beep");
-	});
+	});*/
 
 	// or reset the sound volume
 
-	$("#myButton").on("click", function(){
+	/*$("#myButton").on("click", function(){
 	    $.ionSound.play("censor_beep:0.5");
 	});*/
 
@@ -81,9 +83,14 @@ function init(value)
 					
 					
 					console.log("success");
+					$.ionSound.play("glass_put_down_on_metal_draining_board:0.25");
 				}
-				else
+				else{
 					console.log("fail");
+					if (tile != null) {
+						$.ionSound.play("uhoh");
+					}
+				}
 			}
 			else
 				alert("This is player[" + game.token_index + "]'s round!");
