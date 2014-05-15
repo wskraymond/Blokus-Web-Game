@@ -49,47 +49,67 @@ function Game(number_cells,board_size,border_size)
 		
 		if(!online)	//no network, single PC version
 			client_index = game.token_index;
-	}	
-	
+	}
+
 	function getPlayerIndex()
 	{
-		client_index = parseInt($.cookie(playerIndex_cookie));
-		if(!client_index)
-			alert("playerIndex_cookie error");
+		if (network){
+			client_index = parseInt($.cookie(playerIndex_cookie));
+			if(client_index == NaN)
+				alert("playerIndex_cookie error");
+		} else
+			client_index = 0;
 	}
-	game.init = function(onSocketConnected,onSocketDisconnect,onSocketIndex,onSocketMessage){
-		// Add a Event listener
-		if(onSocketConnected)
-			client_socket.on('connect',onSocketConnected);
+
+	/*----------------------------------Raymond's change---------------------------------------*/
+	game.init = function(onSocketConnected,onSocketDisconnect,onSocketMessage){
+		//client_socket = io.connect(websocket_server_domain, {port: websocket_server_port, transports: ["websocket"]});
+		client_socket = io.connect('csci4140project-chkjohn.rhcloud.com:8000/game');
+		if (network){
+			var gameroom = $.cookie(gameroom_cookie);
+			client_socket = io.connect('csci4140project-chkjohn.rhcloud.com:8000/gameroom_' + gameroom);
+			//console.log(gameroom);
+			client_socket.emit('getUserInfo', $.cookie('sessionid'), parseInt($.cookie(playerIndex_cookie)));
+		} else{
+			console.log('guest mode');
+		}
+
+		getPlayerIndex();
+
+		/******	John's change ******/
+		if(client_socket==null)
+			alert("Server connection fails");
 		else
+			console.log('Client['+ client_index +'] has connected to the server!');
+
+		// Add Event listeners
+		if(onSocketConnected){
+			client_socket.on('connect',onSocketConnected);
+			console.log("onSocketConnected ok");
+		} else
 			console.log("no onSocketConnected");
-		
+
 		/*
 		if(onSocketIndex)
 			client_socket.on('clientIndex',onSocketIndex);
 		else
 			console.log("no onSocketIndex");
 		*/
-		
-		if(onSocketDisconnect)
+
+		if(onSocketDisconnect){
 			client_socket.on('disconnect',onSocketDisconnect);
-		else
+			console.log("onSocketDisconnected ok");
+		} else
 			console.log("no onSocketDisconnect");
-			
-		if(onSocketMessage)
+
+		if(onSocketMessage){
 			client_socket.on('message',onSocketMessage);
-		else
+			console.log("onSocketMessage ok");
+		} else
 			console.log("no onSocketMessage");
-		
-		getPlayerIndex();
-		//connect to server
-		client_socket = io.connect(websocket_server_domain, {port: websocket_server_port, transports: ["websocket"]});
-		if(client_socket==null)
-			alert("Server connection fails");
-		else
-			console.log('Client['+ client_index +'] has connected to the server!');
-		
+		/******************/
 	};
+	/*----------------------------------------------------------------------------------------*/
 	
 	game.isGameEnd = function(){
 		if(game.pass_num>=4)

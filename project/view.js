@@ -1,3 +1,4 @@
+/*------------------------------Raymond's change------------------------------*/
 function viewRefresh(canvas)
 {
 	var context = canvas.getContext('2d');
@@ -10,18 +11,19 @@ function viewRefresh(canvas)
 		{
 			if(hint_p.test(game.board[i][j]))
 			{
-				if(h_p.test(game.board[i][j]))
+				if(client_index!==null)
 					context.fillStyle = color_set[hid];
 				else
 					context.fillStyle = color_set['B'];
 			}
 			else
 				context.fillStyle = color_set[game.board[i][j]];
-			
+
 			context.fillRect(x,y,game.cell_size,game.cell_size);
 		}
 	}
 }
+/*--------------------------------------------------------------------------*/
 
 function cellUpdate(canvas, clicked_coordinate) {
         var context = canvas.getContext('2d');
@@ -60,7 +62,6 @@ function postureViewUpdate(canvas,tile,playerID)
 	context.lineWidth = 1;
 	context.strokeStyle = '#669966';
 	context.stroke();
-	
 	context.fillStyle = color_set[playerID];
 	//update
 	if(tile!=null)

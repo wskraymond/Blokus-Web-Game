@@ -5,18 +5,23 @@ for a total of 400 squares.
 //configuration variable
 
 /*-----------SocketIO----------------*/
-var network = false; 	//multi-player connection version => set true , otherwise set false
+var network = true; 	//multi-player connection version => set true , otherwise set false
 var websocket_server_domain = "http://localhost";
 var websocket_server_port = 8000;
-var client_socket;
+var client_socket = null;
 var playerIndex_cookie = "playerIndex";	//session key's cookie name
 var network_cookie = "network";
+var gameroom_cookie = "gameroom";
 /*------------------------------------*/
 
 var tile;
 var tile_index;
-var client_index = null;
-
+var client_index = null;//Danny's change
+//Danny's change
+/*
+if(!network)
+	client_index = 0;
+*/
 //default setting
 //B for background color
 //H for hints' color
