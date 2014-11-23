@@ -1,9 +1,24 @@
-Hello. I'm John.
-I have modifed the files:
-	model.js	line 105
-	view.js 	line 68
-	index.html	line 33
+Youtube Demo: http://youtu.be/rjVcI0njY04?list=PL1AQwE-TAr-dINf7tPwItHA2bSYlp8iqH
 
-I modifed some layout of the UI in index.html, and made the game flow become clockwise.
+Name: Blokus Game
 
-I have added some comments in those files. Please check them.
+Features:
+	- Game Play
+	- Multi-players
+	- Game Room
+	
+Technology: 
+	- Front-end: 
+		- Javascript 
+			-> control all game logic
+			-> conrtol rendering
+		- Canvas
+			-> Rendering
+		- Websocket
+			-> stateful connection for muli-playing
+			-> send & receive msg
+	- Back-end:
+		- Node.js 
+			-> Message Broadcasting for game play
+			-> Game Room logic 
+			-> DB connection
